@@ -5,6 +5,7 @@
  */
 package minimizacaoafd.Controller;
 
+import java.io.IOException;
 import minimizacaoafd.Model.Afd;
 import minimizacaoafd.Model.Tabela;
 import minimizacaoafd.Persistence.AfdDAO;
@@ -22,14 +23,29 @@ public class Minimizacao {
     private final String nomeArqTabela;
     private final String nomeArqAfdMin;
     
-    public Minimizacao(String nomeArqDescAfd, String nomeArqTabela, String nomeArqAfdMin){        
+    public Minimizacao(String nomeArqDescAfd, String nomeArqTabela, String nomeArqAfdMin) throws IOException{        
         this.nomeArqDescAfd = nomeArqDescAfd;
         this.nomeArqTabela = nomeArqTabela;
         this.nomeArqAfdMin = nomeArqAfdMin;
-        //TODO inicializar afd e inicializar tabela
+        AfdDAO afdDao = new AfdDAO();
+        afd = afdDao.openAfd(this.nomeArqDescAfd);
+        tabelaMinimizacao = new Tabela();
     }
     
     public void executar(){
         //TODO minimizar e salvar a tabela e o afd minimizado utilizando o AfdDAO e a TabelaDAO
+    }
+    
+    /**
+     * Método privado que salva os resultados do algoritmo de minimização. Salva o AFD minimizado em um arquivo
+     * e a tabela do algoritmo de minimização em um outro arquivo
+     * @throws IOException Se der algum erro ao escrever no arquivo será retornado
+     * uma excessão com a mensagem de erro
+     */
+    private void save() throws IOException{
+        AfdDAO afdDao = new AfdDAO();
+        afdDao.saveAfd(afd, nomeArqAfdMin);
+        TabelaDAO tabelaDao = new TabelaDAO();
+        tabelaDao.saveTabelaMinimizacao(tabelaMinimizacao, nomeArqTabela);
     }
 }

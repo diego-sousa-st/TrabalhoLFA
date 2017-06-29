@@ -20,7 +20,17 @@ public class Tabela {
         linhas = new ArrayList<Linha>();
     }
     
+    /**
+     * Método que insere uma nova linha na tabela do algoritmo de minimização
+     * @param linha 
+     */
     public void addLinha(Linha linha){
         linhas.add(linha);
+    }
+    
+    @Override
+    public String toString(){
+       //TODO Maurício formatar a tabela toda bonita independente de como ficar
+       return "";
     }
 }

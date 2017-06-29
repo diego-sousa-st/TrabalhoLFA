@@ -76,7 +76,7 @@ public class Afd {
             }
         }
     }
-    
+
     /**
      * Ajusta o alfabeto de entrada no construtor
      *
@@ -95,7 +95,7 @@ public class Afd {
         for (String x : alfabetoDeEntradaAjustado) {
             this.alfabetoDeEntrada.add(x);
         }
-    }         
+    }
 
     /**
      * Ajusta as transições no contrutor
@@ -107,15 +107,15 @@ public class Afd {
         s = s.substring(2, s.length() - 2);
 
         //divido as partes, ou seja, cada movimento em si
-        String movimentosAjustado[] = s.split("\n");
+        String transicoesAjustadas[] = s.split("\n");
 
         //divido o vetor denovo para poder saber oque esta antes e oque esta depois da "->"
         //desta forma cada linha da matriz representa um movimento
         //e a coluna 0 possui a parte 1 e a coluna 1 possui a parte 2
-        String movimentosMatriz[][] = new String[movimentosAjustado.length][2];
+        String transicoesMatriz[][] = new String[transicoesAjustadas.length][2];
         int contLinha = 0;
-        for (String x : movimentosAjustado) {
-            movimentosMatriz[contLinha] = x.split("->");
+        for (String x : transicoesAjustadas) {
+            transicoesMatriz[contLinha] = x.split("->");
             contLinha++;
         }
 
@@ -123,34 +123,31 @@ public class Afd {
         this.transicoes = new ArrayList<Transicao>();
         //crio os vetores auxiliares para colocar os fragmentos significativos de cada string da parte 1 e 2
         String vetorAuxDaParte1[] = new String[2];//contera o estado de origem e o que deve ler para se mover
-        String vetorAuxDaParte2[] = new String[3];//contera para que estado ir
+        String estadoAposTransicao;//contera para que estado ir
         //percorro cada linha da matriz extraindo as informacoes necessarias
         for (int i = 0; i < contLinha; i++) {
             //String contendo a parte um da String
-            String m = movimentosMatriz[i][0];
+            String estado_simbolo = transicoesMatriz[i][0];
 
             //retiro os parenteses da primeira parte
-            m = m.substring(1, m.length() - 1);
+            estado_simbolo = estado_simbolo.substring(1, estado_simbolo.length());
 
             //divido a informacao da primeira parte em duas, na posicao 0 tem o estado e na posicao 1 tem oque deve ler para mover
-            vetorAuxDaParte1 = m.split(",");
-
+            vetorAuxDaParte1 = estado_simbolo.split(",");
+            String estadoAntesTransicao = vetorAuxDaParte1[0];
+            String simboloAserLido = vetorAuxDaParte1[1];
             //String contendo a parte dois da movimentacao
-            String m2 = movimentosMatriz[i][1];
+            estadoAposTransicao = transicoesMatriz[i][1];
 
             //retiro os parenteses da segunda parte
-            m2 = m2.substring(1, m2.length() - 1);
-
-            //divido a informacao da segunda parte em tres, na posicao 0 tem o estado para onde ir ,na posicao 1 tem oque se deve marcar 
-            //e na posicao 2 tem a direcao para onde mover a cabeça de leitura
-            vetorAuxDaParte2 = m2.split(",");
-
+            estadoAposTransicao = estadoAposTransicao.substring(0, estadoAposTransicao.length() - 1);
+            //------ TALVEZ NÃO É NECESSÁRIO --------
             //neste ponto verifico se tem algum parenteses sobrando e retiro ele
-            if (vetorAuxDaParte2[2].length() > 1) {
-                vetorAuxDaParte2[2] = vetorAuxDaParte2[2].substring(0, 1);
+            if (estadoAposTransicao.length() > 1) {
+                estadoAposTransicao = estadoAposTransicao.substring(0, 1);
             }
-            //crio e adiciono o movimento a lista de movimentos
-            this.transicoes.add(new Transicao(getEstado(vetorAuxDaParte1[0]), getEstado(vetorAuxDaParte2[0]), vetorAuxDaParte1[0]));
+            //crio e adiciono a transicao na lista de transições
+            this.transicoes.add(new Transicao(getEstado(estadoAntesTransicao), getEstado(estadoAposTransicao), simboloAserLido));
         }
     }
 
@@ -175,7 +172,7 @@ public class Afd {
      * @param s simbolo a ser verificada
      * @return boolean onde true-pertence e false-não pertence
      */
-    private boolean simboloPertenceAoAlfabeto(String s) {
+    public boolean simboloPertenceAoAlfabeto(String s) {
         for (String x : alfabetoDeEntrada) {
             if (x.equals(s)) {
                 return true;
@@ -191,7 +188,8 @@ public class Afd {
      * @param simboloLido string lida na fita de entrada
      * @return retorna um objeto Transicao caso exista e null caso contrário
      */
-    private Transicao getTransicao(String simboloLido) {
+    //AQUI TALVEz TERÁ DE RECEBER O ESTADO ATUAL COMO PARAMETRO
+    public Transicao getTransicao(String simboloLido) {
         for (Transicao transicao : this.transicoes) {
             if (estadoAtual.equals(transicao.getEstadoAtual())) {//confirmo se é o mesmo estado
                 if (simboloLido.equals(transicao.getSimboloLido())) {//confirmo se oque leu para mover é igual
@@ -210,5 +208,84 @@ public class Afd {
      */
     private void setEstadoAtual(Transicao movimento) {
         estadoAtual = movimento.getEstadoAposTransicao();
+    }
+
+    /**
+     * Método que retorna uma representação do AFD em formato de String. O
+     * formato segue o padrão apresentado no enunciado do trabalho de LFA
+     *
+     * @return String que representa o AFD
+     */
+    @Override
+    public String toString() {
+        //incializa a string e gera o conjunto de estados
+        String TAB = "    ";
+        String afd = "(\n" + TAB + "{";
+        for (Estado estado : estados) {
+            afd += estado.getNome() + ",";
+        }
+        afd += "},\n";
+        //gera o conjunto com o alfabeto de entrada
+        afd += TAB + "{";
+        for (String simbolo : alfabetoDeEntrada) {
+            afd += simbolo + ",";
+        }
+        afd += "},\n";
+        //gera o conjunto com todas as transições
+        afd += TAB + "{\n";
+        for (Transicao transicao : transicoes) {
+            afd += TAB + TAB + "(" + transicao.getEstadoAtual().getNome() + "," + transicao.getSimboloLido()
+                    + "->" + transicao.getEstadoAposTransicao().getNome() + "),\n";
+        }
+        afd += TAB + "},";
+        //gera o estado inicial
+        afd += TAB + estadoInicial.getNome() + ",\n";
+        //gera o conjunto de estados finais
+        afd += TAB + "{";
+        for (Estado estado : estados) {
+            if (estado.getEhFinal()) {
+                afd += estado.getNome() + ",";
+            }
+        }
+        //retirar ultima vírgula
+        afd = afd.substring(0, afd.length() - 1);
+        afd += "}\n)";
+        return afd;
+    }
+
+    /**
+     * Método que retorna o conjunto de estados do AFD
+     *
+     * @return
+     */
+    public List<Estado> getEstados() {
+        return estados;
+    }
+
+    /**
+     * Método que retorna o estado inicial do AFD
+     *
+     * @return
+     */
+    public Estado getEstadoInicial() {
+        return estadoInicial;
+    }
+
+    /**
+     * Método que retorna o alfabeto de entrada do AFD
+     *
+     * @return
+     */
+    public List<String> getAlfabetoDeEntrada() {
+        return alfabetoDeEntrada;
+    }
+
+    /**
+     * Método que retorna o conjunto de transições do AFD
+     *
+     * @return
+     */
+    public List<Transicao> getTransicoes() {
+        return transicoes;
     }
 }

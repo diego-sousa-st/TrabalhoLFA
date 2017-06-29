@@ -34,7 +34,7 @@ public class Linha {
      * @param par2 estado j
      */
     public Linha(Estado par1, Estado par2) {
-        this(par1, par2, true);
+        this(par1, par2, true, "");
     }
 
     /**
@@ -45,20 +45,21 @@ public class Linha {
      * @param par2 estado j
      * @param podeJuntar Representa se o estado i e j podem(true) se juntar ou
      * não(false)
+     * @param motivo Motivo pelo qual nao pode juntar um estado com outro
      */
-    public Linha(Estado par1, Estado par2, boolean podeJuntar) {
+    public Linha(Estado par1, Estado par2, boolean podeJuntar, String motivo) {
         this.par1 = par1;
         this.par2 = par2;
         this.podeJuntar = podeJuntar;
         dependentes = new ArrayList<Linha>();
-        motivo = "";
+        this.motivo = motivo;
     }
 
     /**
      * Método que insere uma linha como dependente deste objeto. Se este objeto
      * não puder se juntar nenhum de seus dependentes poderá
      *
-     * @param linha linha que depende desta linha(this object) da tabela
+     * @param linha linha que depende desta linha(este objeto) da tabela
      */
     public void inserirDependente(Linha linha) {
         dependentes.add(linha);
@@ -105,7 +106,7 @@ public class Linha {
      *
      * @return
      */
-    public boolean PodeJuntar() {
+    public boolean getPodeJuntar() {
         return podeJuntar;
     }
 
@@ -126,15 +127,17 @@ public class Linha {
     public String getMotivo() {
         return motivo;
     }
-   
+
     /**
      * Método que verifica se uma linha é igual a outra.
-     * @param linha
-     * @return 
+     *
+     * @param linha linha a ser comparada com a linha atual
+     * @return true caso a linha seja igual e false caso contrario
      */
-    public boolean equals(Linha linha){
-        if(linha == this)
+    public boolean equals(Linha linha) {
+        if (linha == this) {
             return true;
+        }
         return false;
     }
 }
