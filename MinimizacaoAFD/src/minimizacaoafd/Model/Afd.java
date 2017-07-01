@@ -191,7 +191,7 @@ public class Afd {
      */
     public Transicao getTransicao(Estado e, String simboloLido) {
         for (Transicao transicao : this.transicoes) {
-            if (simboloLido.equals(transicao.getSimboloLido()) && (transicao.getEstadoAtual() == e)) {//confirmo se oque leu para mover é igual
+            if (simboloLido.equals(transicao.getSimboloLido()) && (e.equals(transicao.getEstadoAtual()))) {//confirmo se oque leu para mover é igual
                 return transicao;
             }
         }
@@ -217,7 +217,7 @@ public class Afd {
     @Override
     public String toString() {
         //incializa a string e gera o conjunto de estados
-        String TAB = "    ";
+        String TAB = "\t";
         String afd = "(\n" + TAB + "{";
         for (Estado estado : estados) {
             afd += estado.getNome() + ",";

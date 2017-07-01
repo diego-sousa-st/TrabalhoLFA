@@ -17,7 +17,7 @@ import minimizacaoafd.Model.Afd;
  */
 public class AfdDAO {
 
-    private static final int TAB = 4;
+    private static final int TAB = 1;
     private static final int QUINTUPLA = 5;
 
     /**
@@ -48,7 +48,7 @@ public class AfdDAO {
             boolean naoAchou = true;
             while (naoAchou) {
                 transicoesAux = arq.readLine();
-                if (transicoesAux.equals("    },")) {
+                if (transicoesAux.equals("\t},")) {
                     transicoesAux = transicoesAux.substring(TAB);
                     naoAchou = false;
                 } else {

@@ -34,7 +34,7 @@ public class Minimizacao {
         this.nomeArqAfdMin = nomeArqAfdMin;
         AfdDAO afdDao = new AfdDAO();
         afd = afdDao.openAfd(this.nomeArqDescAfd);
-        tabelaMinimizacao = new Tabela();
+        tabelaMinimizacao = new Tabela();        
     }
     
     /**
@@ -75,11 +75,12 @@ public class Minimizacao {
      */
     private void minimizandoTabela(){
         for(Linha l: tabelaMinimizacao.getLinhas()){ // cada linha da tabela.
-            Estado a = l.getPar1();
+            Estado a = l.getPar1();            
             Estado b = l.getPar2();
             
             for(String simb: afd.getAlfabetoDeEntrada()){ // verifico para cada simbolo aonde os estados vao.
                 Estado ondeAVai = afd.getTransicao(a, simb).getEstadoAposTransicao();
+                System.out.println(ondeAVai.getNome());
                 Estado ondeBVai = afd.getTransicao(b, simb).getEstadoAposTransicao();
                 
                 // achar linha.
