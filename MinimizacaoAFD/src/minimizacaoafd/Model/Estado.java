@@ -45,5 +45,5 @@ public class Estado {
      */
     public void setEhFinal(boolean ehFinal) {
         this.ehFinal = ehFinal;
-    }       
+    }
 }

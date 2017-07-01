@@ -98,7 +98,7 @@ public class Afd {
     }
 
     /**
-     * Ajusta as transições no contrutor
+     * Ajusta as transições no construtor
      *
      * @param s String da tabela das transições
      */
@@ -180,21 +180,19 @@ public class Afd {
         }
         return false;
     }
-
+    
     /**
      * Método que retorna um objeto que reprenta a transicao ao se ler um
-     * simbolo
-     *
+     * simbolo, estando no Estado e.
+     * 
+     * @param e estado inicial.
      * @param simboloLido string lida na fita de entrada
      * @return retorna um objeto Transicao caso exista e null caso contrário
      */
-    //AQUI TALVEz TERÁ DE RECEBER O ESTADO ATUAL COMO PARAMETRO
-    public Transicao getTransicao(String simboloLido) {
+    public Transicao getTransicao(Estado e, String simboloLido) {
         for (Transicao transicao : this.transicoes) {
-            if (estadoAtual.equals(transicao.getEstadoAtual())) {//confirmo se é o mesmo estado
-                if (simboloLido.equals(transicao.getSimboloLido())) {//confirmo se oque leu para mover é igual
-                    return transicao;
-                }
+            if (simboloLido.equals(transicao.getSimboloLido()) && (transicao.getEstadoAtual() == e)) {//confirmo se oque leu para mover é igual
+                return transicao;
             }
         }
         return null;
