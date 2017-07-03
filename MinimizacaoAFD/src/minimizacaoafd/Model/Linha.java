@@ -49,7 +49,9 @@ public class Linha {
         dependentes = new ArrayList<Linha>();
         this.motivo = motivo;
     }
-
+    
+    
+    
     /**
      * Método que insere uma linha como dependente deste objeto. Se este objeto
      * não puder se juntar nenhum de seus dependentes poderá
@@ -59,7 +61,9 @@ public class Linha {
     public void inserirDependente(Linha linha) {
         dependentes.add(linha);
     }
-
+    
+    
+    
     /**
      * Altera o flag se pode juntar ou nao
      *
@@ -77,7 +81,8 @@ public class Linha {
     public void setMotivo(String motivo) {
         this.motivo = motivo;
     }
-
+    
+    
     /**
      * Retorna o estado i
      *
@@ -122,7 +127,8 @@ public class Linha {
     public String getMotivo() {
         return motivo;
     }
-
+    
+    
     /**
      * Método que verifica se uma linha é igual a outra.
      *

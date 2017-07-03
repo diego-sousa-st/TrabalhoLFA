@@ -24,11 +24,6 @@ public class Tabela {
         linhas.add(linha);
     }
     
-    @Override
-    public String toString(){
-       //TODO Maurício formatar a tabela toda bonita independente de como ficar
-       return "";
-    }
     
     /**
      * Retorna todas as linhas da tabela.
@@ -57,6 +52,14 @@ public class Tabela {
         return null;
     }
     
+    
+    @Override
+    public String toString(){
+       //TODO Maurício formatar a tabela toda bonita independente de como ficar
+       return "";
+    }
+    
+    //APAGAR ESTE METODO DEPOIS
     public void exibirTabelaImprovisada(){
         for(Linha l: linhas){
             String x = "";

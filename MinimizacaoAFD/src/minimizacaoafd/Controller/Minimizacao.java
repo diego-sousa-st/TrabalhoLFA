@@ -49,6 +49,7 @@ public class Minimizacao {
         System.out.println(afd.toString());
     }
     
+    
     /**
      * Gera a tabela inicial do algoritmo e também ja diz quais indices sao estados finais com nao finais.
      */
@@ -69,6 +70,7 @@ public class Minimizacao {
         }
     }
     
+    
     /**
      * Aplica o algoritmo de minimizacao em cima da tabela.
      */
@@ -81,12 +83,12 @@ public class Minimizacao {
             Estado b = l.getPar2();
             
             for(String simb: afd.getAlfabetoDeEntrada()){ // verifico para cada simbolo aonde os estados vao.
-                Estado ondeAVai = afd.getTransicao(a, simb).getEstadoAposTransicao();
-                Estado ondeBVai = afd.getTransicao(b, simb).getEstadoAposTransicao();
+                Estado ondeAVai = afd.getTransicao(a, simb);
+                Estado ondeBVai = afd.getTransicao(b, simb);
                 
                 // achar linha.
                 Linha paraOndeVai = tabelaMinimizacao.getLinha(ondeAVai, ondeBVai);
-                if(paraOndeVai == null || paraOndeVai == l){
+                if(paraOndeVai == null || paraOndeVai.equals(l)){
                     continue;
                 }
                 if(paraOndeVai.getPodeJuntar()){
@@ -119,10 +121,39 @@ public class Minimizacao {
         }
     }
     
+    
     /**
      * Atualiza o afd com base na tabela de minimizacao.
      */
     private void atualizandoAfd(){
+        List<HashSet> conjuntosDeEstadosJuntaveis = gerarConjuntosDeEstadosJuntaveis();
+        
+        // neste ponto todos os estados juntaveis estao em um conjunto.
+        // agora cria-se uma lista com os novos estados e digo de que estados sao feitos
+        List<Estado> novosEstados = new ArrayList<Estado>();
+        List<ArrayList> doQueSaoFormadosOsNovosEstados = new ArrayList<ArrayList>();
+        gerarListasAuxiliares(novosEstados,doQueSaoFormadosOsNovosEstados,conjuntosDeEstadosJuntaveis);
+        
+        //agora tenho todos os novos estados e do que sao feitos
+        List<Estado> estados = arrumandoListaDeEstados(novosEstados,doQueSaoFormadosOsNovosEstados);
+        
+        //ARRUMANDO ALFABETO DE ENTRADA = permanece o mesmo
+        
+        List<Transicao> transicoes = arrumandoTransicoes(novosEstados,doQueSaoFormadosOsNovosEstados);
+        
+        Estado inicial = tornarEmNovoEstado(afd.getEstadoInicial(),doQueSaoFormadosOsNovosEstados,novosEstados);
+        
+        //ARRUMANDO LISTA ESTADOS FINAIS = ja arrumado
+        
+        afd = new Afd(estados, inicial, afd.getAlfabetoDeEntrada(), transicoes);
+    }
+    
+    /**
+     * Gera e retorna a lista com os conjuntos juntaveis, ou seja, cada elemento desta lista é um conjunto com estados que
+     * podem se juntar.
+     * @return 
+     */
+    private List<HashSet> gerarConjuntosDeEstadosJuntaveis(){
         List<HashSet> conjuntosDeEstadosJuntaveis = new ArrayList<HashSet>(); // lista de conjuntos
         for(Linha l: tabelaMinimizacao.getLinhas()){
             if(l.getPodeJuntar()){
@@ -146,12 +177,16 @@ public class Minimizacao {
                 }
             }
         }
-        
-        // neste ponto todos os estados juntaveis estao em um conjunto.
-        
-        // agora crio uma lista com os novos estados e digo de que estados sao feitos
-        List<Estado> novosEstados = new ArrayList<Estado>();
-        List<ArrayList> doQueSaoFormadosOsNovosEstados = new ArrayList<ArrayList>();
+        return conjuntosDeEstadosJuntaveis;
+    }
+    
+    /**
+     * Gera duas lista, que sao passadas por referencia.
+     * 
+     * @param novosEstados
+     * @param doQueSaoFormadosOsNovosEstados 
+     */
+    private void gerarListasAuxiliares(List<Estado> novosEstados, List<ArrayList> doQueSaoFormadosOsNovosEstados, List<HashSet> conjuntosDeEstadosJuntaveis){
         for(HashSet conjunto: conjuntosDeEstadosJuntaveis){
             // criar o novo estado.
             Estado novoEstado = new Estado(gerarNovoNome(conjunto),gerarNovoEhFinal(conjunto));
@@ -164,10 +199,9 @@ public class Minimizacao {
             }
             doQueSaoFormadosOsNovosEstados.add(x);
         }
-        
-        //agora tenho todos os novos estados e do que sao feitos
-        
-        //ARRUMANDO LISTA DE ESTADOS
+    }
+    
+    private List<Estado> arrumandoListaDeEstados(List<Estado> novosEstados, List<ArrayList> doQueSaoFormadosOsNovosEstados){
         List<Estado> estados = new ArrayList<Estado>();
         for(Estado e: afd.getEstados()){ // todos os estados do afd original
             Estado x = tornarEmNovoEstado(e,doQueSaoFormadosOsNovosEstados,novosEstados);
@@ -184,11 +218,10 @@ public class Minimizacao {
                 estados.add(x);
             }
         }
-        
-        //ARRUMANDO ALFABETO DE ENTRADA
-        //permanece o mesmo
-        
-        //ARRUMANDO TRANSICOES
+        return estados;
+    }
+    
+    private List<Transicao> arrumandoTransicoes(List<Estado> novosEstados, List<ArrayList> doQueSaoFormadosOsNovosEstados){
         List<Transicao> transicoes = new ArrayList<Transicao>();
         for(Transicao t: afd.getTransicoes()){
             //atual = ou continua o mesmo estado ou vira um novo estado formado
@@ -210,14 +243,7 @@ public class Minimizacao {
                 transicoes.add(transicaoAtual);
             }
         }
-        
-        //ARRUMANDO ESTADO INICIAL
-        Estado inicial = tornarEmNovoEstado(afd.getEstadoInicial(),doQueSaoFormadosOsNovosEstados,novosEstados);
-        
-        //ARRUMANDO LISTAESTADOS FINAIS
-        //nao precisa arruma
-        
-        afd = new Afd(estados, inicial, afd.getAlfabetoDeEntrada(), transicoes);
+        return transicoes;
     }
     
     /**
@@ -264,6 +290,12 @@ public class Minimizacao {
         }
         return null;
     }
+    
+    
+    
+    
+    
+    
     
     /**
      * Método privado que salva os resultados do algoritmo de minimização. Salva o AFD minimizado em um arquivo

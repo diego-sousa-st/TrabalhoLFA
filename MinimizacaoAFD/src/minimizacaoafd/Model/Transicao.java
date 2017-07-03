@@ -1,7 +1,12 @@
 package minimizacaoafd.Model;
 
 /**
- *
+ * Representa uma transicao, exemplo:
+ * Transicao (qx,simb->qy)
+ * estadoAtual = qx
+ * estadoAposTransicao = qy
+ * simboloLido = simb
+ * 
  * @author sDiego, Nechelley e Maurício
  */
 public class Transicao {
@@ -25,21 +30,24 @@ public class Transicao {
         this.simboloLido = simboloLido;        
     }
 
-    /**Método que retorna o estadoAtual, o qual se inicia a transição
+    /**
+     * Método que retorna o estadoAtual, o qual se inicia a transição
      * @return Retorna o estado atual
      */
     public Estado getEstadoAtual() {
         return estadoAtual;
     }
 
-    /**Método que retorna o estado em que o AFD se encontra após a realização da transição
+    /**
+     * Método que retorna o estado em que o AFD se encontra após a realização da transição
      * @return Retorna o estado após a transição
      */
     public Estado getEstadoAposTransicao() {
         return estadoAposTransicao;
     }    
 
-    /**Retorna o simbolo lido para que a transição do estadoAtual->estadoAposTransicao seja feita
+    /**
+     * Retorna o simbolo lido para que a transição do estadoAtual->estadoAposTransicao seja feita
      * @return Retorna o simbolo lido
      */
     public String getSimboloLido() {

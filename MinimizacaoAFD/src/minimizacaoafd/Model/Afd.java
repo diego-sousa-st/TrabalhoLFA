@@ -18,18 +18,18 @@ public class Afd {
     private List<String> alfabetoDeEntrada;
     //contem o conjunto de transições possiveis no AFD
     private List<Transicao> transicoes;
-
-    public Afd(String estados, String alfabetoDeEntrada, String transicoes, String estadoInicial, String estadosFinais) {
-        ajustaEstados(estados, estadoInicial, estadosFinais);
-        ajustaAlfabetoDeEntrada(alfabetoDeEntrada);
-        ajustaTransicoes(transicoes);
-    }
     
     public Afd(List<Estado> estados, Estado estadoInicial, List<String> alfabetoDeEntrada, List<Transicao> transicoes){
         this.estados = estados;
         this.estadoInicial = estadoInicial;
         this.alfabetoDeEntrada = alfabetoDeEntrada;
         this.transicoes = transicoes;
+    }
+    
+    public Afd(String estados, String alfabetoDeEntrada, String transicoes, String estadoInicial, String estadosFinais) {
+        ajustaEstados(estados, estadoInicial, estadosFinais);
+        ajustaAlfabetoDeEntrada(alfabetoDeEntrada);
+        ajustaTransicoes(transicoes);
     }
     
     /**
@@ -75,7 +75,6 @@ public class Afd {
      *
      * @param s String com o alfabeto de entrada
      */
-    //AJUSTAR ESTE MÉTODO PORQUE ALGUMAS COISAS MUDARAM NA DESCRIÇÃO
     private void ajustaAlfabetoDeEntrada(String s) {
         //retiro as chaves
         s = s.substring(1, s.length() - 1);
@@ -133,57 +132,10 @@ public class Afd {
 
         //[qx] [ [w] [qy] ]
         this.transicoes.add(new Transicao(getEstado(pelaVirgula[0]), getEstado(pelaSeta[1]), pelaSeta[0]));
-        
-        /*
-        //retiro as chaves e o primeiro \n
-        s = s.substring(2, s.length() - 2);
-
-        //divido as partes, ou seja, cada movimento em si
-        String transicoesAjustadas[] = s.split("\n");
-
-        //divido o vetor denovo para poder saber oque esta antes e oque esta depois da "->"
-        //desta forma cada linha da matriz representa um movimento
-        //e a coluna 0 possui a parte 1 e a coluna 1 possui a parte 2
-        String transicoesMatriz[][] = new String[transicoesAjustadas.length][2];
-        int contLinha = 0;
-        for (String x : transicoesAjustadas) {
-            transicoesMatriz[contLinha] = x.split("->");
-            contLinha++;
-        }
-
-        //Crio a lista
-        this.transicoes = new ArrayList<Transicao>();
-        //crio os vetores auxiliares para colocar os fragmentos significativos de cada string da parte 1 e 2
-        String vetorAuxDaParte1[] = new String[2];//contera o estado de origem e o que deve ler para se mover
-        String estadoAposTransicao;//contera para que estado ir
-        //percorro cada linha da matriz extraindo as informacoes necessarias
-        for (int i = 0; i < contLinha; i++) {
-            //String contendo a parte um da String
-            String estado_simbolo = transicoesMatriz[i][0];
-
-            //retiro os parenteses da primeira parte
-            estado_simbolo = estado_simbolo.substring(1, estado_simbolo.length());
-
-            //divido a informacao da primeira parte em duas, na posicao 0 tem o estado e na posicao 1 tem oque deve ler para mover
-            vetorAuxDaParte1 = estado_simbolo.split(",");
-            String estadoAntesTransicao = vetorAuxDaParte1[0];
-            String simboloAserLido = vetorAuxDaParte1[1];
-            //String contendo a parte dois da movimentacao
-            estadoAposTransicao = transicoesMatriz[i][1];
-
-            //retiro os parenteses da segunda parte
-            estadoAposTransicao = estadoAposTransicao.substring(0, estadoAposTransicao.length() - 1);
-            //------ TALVEZ NÃO É NECESSÁRIO --------
-            //neste ponto verifico se tem algum parenteses sobrando e retiro ele
-            if (estadoAposTransicao.length() > 1) {
-                estadoAposTransicao = estadoAposTransicao.substring(0, 1);
-            }
-            //crio e adiciono a transicao na lista de transições
-            this.transicoes.add(new Transicao(getEstado(estadoAntesTransicao), getEstado(estadoAposTransicao), simboloAserLido));
-        }
-        */
     }
 
+    
+    
     
     /**
      * Adiciona o estado e ao afd.
@@ -243,8 +195,10 @@ public class Afd {
         return transicoes;
     }
     
+    
+    
     /**
-     * Retorna todas as transicoes do estado e
+     * Retorna todas as transicoes partindo do estado e, lendo qualquer simbolo, indo para qualquer lugar.
      * 
      * @param e estado para se buscar as transicoes
      * @return retorna um objeto Transicao caso exista e null caso contrário
@@ -260,17 +214,16 @@ public class Afd {
     }
     
     /**
-     * Método que retorna um objeto que reprenta a transicao ao se ler um
-     * simbolo, estando no Estado e.
+     * Método que retorna o estadoAposTransicao com base no estadoAtual passado e, e no simbolo lido.
      * 
      * @param e estado inicial.
      * @param simboloLido string lida para a trasicao ocorrer
-     * @return retorna um objeto Transicao caso exista e null caso contrário
+     * @return retorna o Estado caso exista e null caso contrário
      */
-    public Transicao getTransicao(Estado e, String simboloLido) {
+    public Estado getTransicao(Estado e, String simboloLido) {
         for (Transicao transicao : this.transicoes) {
             if ((e.equals(transicao.getEstadoAtual())) && simboloLido.equals(transicao.getSimboloLido())) {//confirmo se oque leu para mover é igual
-                return transicao;
+                return transicao.getEstadoAposTransicao();
             }
         }
         return null;

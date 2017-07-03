@@ -43,7 +43,7 @@ public class Estado {
      * @return True caso sejam iguais e false caso contrário
      */
     public boolean equals(Estado e) {
-        if (this == e || nome.equals(e.getNome())) {
+        if (this == e || (nome.equals(e.nome) && (ehFinal == e.ehFinal))) {
             return true;
         }
         return false;

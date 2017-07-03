@@ -7,7 +7,8 @@ import java.io.IOException;
 import minimizacaoafd.Model.Afd;
 
 /**
- *
+ * Classe que manipula arquivos relacionados ao Afd.
+ * 
  * @author Diego, Nechelley e Maurício
  */
 public class AfdDAO {
