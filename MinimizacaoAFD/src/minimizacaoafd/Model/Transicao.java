@@ -1,13 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package minimizacaoafd.Model;
 
 /**
  *
- * @author Diego
+ * @author sDiego, Nechelley e Maurício
  */
 public class Transicao {
     //estado que iniciou a transição
@@ -49,5 +44,12 @@ public class Transicao {
      */
     public String getSimboloLido() {
         return simboloLido;
-    }     
+    }
+    
+    public Boolean equals(Transicao t){
+        if (this == t || (t.estadoAtual.equals(estadoAtual) && t.simboloLido.equals(simboloLido) && t.estadoAposTransicao.equals(estadoAposTransicao))) {
+            return true;
+        }
+        return false;
+    }
 }

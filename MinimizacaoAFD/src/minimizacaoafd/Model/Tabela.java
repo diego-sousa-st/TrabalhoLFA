@@ -1,16 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package minimizacaoafd.Model;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * @author Diego
+ * Representa a tabela sobre a qual o algoritmo de minimizacao ocorrera.
+ * 
+ * @author Diego, Nechelley e Maurício
  */
 public class Tabela {
     
@@ -35,15 +31,6 @@ public class Tabela {
     }
     
     /**
-     * Retorna a linha na posição pos da tabela.
-     * @param pos posição que se deseja procurar.
-     * @return Linha procurada.
-     */
-    public Linha getLinha(int pos){
-        return linhas.get(pos);
-    }
-    
-    /**
      * Retorna todas as linhas da tabela.
      * @return lista com as linhas da tabela.
      */
@@ -52,28 +39,31 @@ public class Tabela {
     }
     
     /**
-     * Retorna a linha cujo pares forem iguais ao passados nos parametros.
+     * Retorna a linha cujo pares forem iguais ao passados nos parametros,
+     * a ordem dos estados e irrelevante.
      * 
      * @param a um dos estados do par.
      * @param b o outro estado do par.
      * @return Linha procurada.
      */
     public Linha getLinha(Estado a, Estado b){
-        Linha resposta = null;
         for(Linha l: linhas){
             Estado la = l.getPar1();
             Estado lb = l.getPar2();
             if((la.equals(a) && lb.equals(b)) || (la.equals(b) && lb.equals(a))){
-                resposta = l;
-                break;
+                return l;
             }
         }
-        return resposta;
+        return null;
     }
     
     public void exibirTabelaImprovisada(){
         for(Linha l: linhas){
-            System.out.println("(" + l.getPar1() + "," + l.getPar2() + ") " + l.getPodeJuntar() + " - " + l.getMotivo());
+            String x = "";
+            for(Linha dep: l.getDependentes()){
+                x += "(" + dep.getPar1().getNome() + "," + dep.getPar2().getNome() + ") ";
+            }
+            System.out.println("(" + l.getPar1().getNome() + "," + l.getPar2().getNome() + ") " + l.getPodeJuntar() + " - " + x + " - " + l.getMotivo());
         }
         
     }

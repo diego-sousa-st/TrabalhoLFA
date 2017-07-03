@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package minimizacaoafd.Persistence;
 
 import java.io.FileWriter;
@@ -13,7 +8,7 @@ import minimizacaoafd.Model.Tabela;
  * Classe de Acesso a Dados para a classe Tabela. Esta classe é responsável por
  * salvar os dados da tabela do algoritmo de minimização em arquivo texto.
  *
- * @author Diego
+ * @author Diego, Nechelley e Maurício
  */
 public class TabelaDAO {
 

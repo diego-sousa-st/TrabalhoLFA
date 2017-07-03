@@ -1,15 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package minimizacaoafd.Model;
 
 /**
  * Classe que representa um estado do AFD, contendo informações como o seu nome
  * e se é ou não um estado final
  *
- * @author Diego
+ * @author Diego, Nechelley e Maurício
  */
 public class Estado {
 
@@ -21,11 +16,6 @@ public class Estado {
     public Estado(String nome, boolean ehFinal) {
         this.nome = nome;
         this.ehFinal = ehFinal;
-    }
-
-    //construtor de um estado que recebe somente o nome não coloca-o como final
-    public Estado(String nome) {
-        this(nome, false);
     }
 
     /**
@@ -47,27 +37,13 @@ public class Estado {
     }
 
     /**
-     * Método que altera se um estado é final ou não. Em tese, esse método nem
-     * poderia existir, já que na descrição do AFD essa informação já é passada,
-     * mas por questões de conveniência e dinamicidade ele foi mantido.
-     *
-     * @param ehFinal True caso seja final e false caso contrário
-     */
-    public void setEhFinal(boolean ehFinal) {
-        this.ehFinal = ehFinal;
-    }
-
-    /**
      * Método que verifica se um estado é igual ao outro
      *
      * @param e estado a ser comparado com o estado atual
      * @return True caso sejam iguais e false caso contrário
      */
     public boolean equals(Estado e) {
-        if (this == e) {
-            return true;
-        }
-        if (nome.equals(e.getNome())) {
+        if (this == e || nome.equals(e.getNome())) {
             return true;
         }
         return false;

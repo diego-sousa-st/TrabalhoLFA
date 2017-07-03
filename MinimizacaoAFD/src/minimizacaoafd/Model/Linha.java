@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package minimizacaoafd.Model;
 
 import java.util.ArrayList;
@@ -13,7 +8,7 @@ import java.util.List;
  * Contém os índice [i,j], D[i,j], S[i,j] e o Motivo porque i e j não podem
  * juntar
  *
- * @author Diego
+ * @author Diego, Nechelley e Maurício
  */
 public class Linha {
 

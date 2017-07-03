@@ -1,23 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package minimizacaoafd.Model;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * @author Diego
+ * Classe que representa um automato finito deterministico.
+ * 
+ * @author Diego, Nechelley e Maurício
  */
 public class Afd {
 
     //contem o conjunto de estados do AFD
     private List<Estado> estados;
-    //contem o estado atual do AFD
-    private Estado estadoAtual;
     //contem o estado inicial, ou seja, onde o AFD começa
     private Estado estadoInicial;
     //contem os simbolos do alfabeto do AFD
@@ -30,7 +24,14 @@ public class Afd {
         ajustaAlfabetoDeEntrada(alfabetoDeEntrada);
         ajustaTransicoes(transicoes);
     }
-
+    
+    public Afd(List<Estado> estados, Estado estadoInicial, List<String> alfabetoDeEntrada, List<Transicao> transicoes){
+        this.estados = estados;
+        this.estadoInicial = estadoInicial;
+        this.alfabetoDeEntrada = alfabetoDeEntrada;
+        this.transicoes = transicoes;
+    }
+    
     /**
      * Ajusta os Estados no construtor
      *
@@ -42,39 +43,31 @@ public class Afd {
     private void ajustaEstados(String todosOsEstados, String estadoInicial, String estadosFinais) {
         //retiro as chaves
         todosOsEstados = todosOsEstados.substring(1, todosOsEstados.length() - 1);
-
+        estadosFinais = estadosFinais.substring(1, estadosFinais.length() - 1);
+        
         //divido as partes
         String estadosAjustados[] = todosOsEstados.split(",");
-
+        String estadosFinaisAjustados[] = estadosFinais.split(",");
+        
         //crio os estados e insiro eles na lista de estados
         this.estados = new ArrayList<Estado>();
-        for (String x : estadosAjustados) {
-            this.estados.add(new Estado(x));
+        for (String x : estadosAjustados) { // para cada nome de estado.
+            Boolean flag = true;
+            for (String fin: estadosFinaisAjustados) {
+                //verifico se o nome do estado é igual ao nome de um dos nomes de estado final
+                if (x.equals(fin)) {
+                    this.estados.add(new Estado(x,true));
+                    flag = false;
+                    break;
+                }
+            }
+            if(flag){
+                this.estados.add(new Estado(x,false));
+            }
         }
 
         //ajustando estadoInicial
         this.estadoInicial = getEstado(estadoInicial);
-
-        //ajustando estadoAtual
-        this.estadoAtual = this.estadoInicial;
-
-        //ajustando estados finais
-        //retiro as chaves
-        estadosFinais = estadosFinais.substring(1, estadosFinais.length() - 1);
-
-        //divido as partes
-        String estadosFinaisAjustados[] = estadosFinais.split(",");
-
-        //percorro todos os estados
-        for (Estado x : this.estados) {
-            //percorro todos os nomes de estados finais
-            for (int i = 0; i < estadosFinaisAjustados.length; i++) {
-                //verifico se o nome do estado é igual ao nome de um dos nomes de estado final
-                if (x.getNome().equals(estadosFinaisAjustados[i])) {
-                    x.setEhFinal(true);
-                }
-            }
-        }
     }
 
     /**
@@ -103,6 +96,45 @@ public class Afd {
      * @param s String da tabela das transições
      */
     private void ajustaTransicoes(String s) {
+        //retiro as chaves e o primeiro \n
+        s = s.substring(2, s.length() - 2);
+        
+        //divido as partes, ou seja, cada movimento em si
+        String transicoesAjustadas[] = s.split("\n");
+        
+        //Crio a lista
+        this.transicoes = new ArrayList<Transicao>();
+        
+        for(int i = 0; i < transicoesAjustadas.length - 1; i++){
+            String aux = transicoesAjustadas[i];
+            //(qx,w->qy),
+            aux = aux.substring(1, aux.length() - 2);
+            
+            //qx,w->qy
+            String pelaVirgula[] = aux.split(",");
+            
+            //[qx] [w->qy]
+            String pelaSeta[] = pelaVirgula[1].split("->");
+            
+            //[qx] [ [w] [qy] ]
+            this.transicoes.add(new Transicao(getEstado(pelaVirgula[0]), getEstado(pelaSeta[1]), pelaSeta[0]));
+        }
+        
+        //ultima iteracao
+        String aux = transicoesAjustadas[transicoesAjustadas.length - 1];
+        //(qx,w->qy),
+        aux = aux.substring(1, aux.length() - 1);
+
+        //qx,w->qy
+        String pelaVirgula[] = aux.split(",");
+
+        //[qx] [w->qy]
+        String pelaSeta[] = pelaVirgula[1].split("->");
+
+        //[qx] [ [w] [qy] ]
+        this.transicoes.add(new Transicao(getEstado(pelaVirgula[0]), getEstado(pelaSeta[1]), pelaSeta[0]));
+        
+        /*
         //retiro as chaves e o primeiro \n
         s = s.substring(2, s.length() - 2);
 
@@ -149,8 +181,101 @@ public class Afd {
             //crio e adiciono a transicao na lista de transições
             this.transicoes.add(new Transicao(getEstado(estadoAntesTransicao), getEstado(estadoAposTransicao), simboloAserLido));
         }
+        */
     }
 
+    
+    /**
+     * Adiciona o estado e ao afd.
+     * @param e 
+     */
+    public void addEstado(Estado e){
+        this.estados.add(e);
+    }
+    
+    /**
+     * Adisiona a transicao t a lista de transicoes do afd.
+     * @param t 
+     */
+    public void addTransicao(Transicao t){
+        this.transicoes.add(t);
+    }
+    
+    
+    
+    
+    
+    
+
+    /**
+     * Método que retorna o conjunto de estados do AFD
+     *
+     * @return
+     */
+    public List<Estado> getEstados() {
+        return estados;
+    }
+
+    /**
+     * Método que retorna o estado inicial do AFD
+     *
+     * @return
+     */
+    public Estado getEstadoInicial() {
+        return estadoInicial;
+    }
+
+    /**
+     * Método que retorna o alfabeto de entrada do AFD
+     *
+     * @return
+     */
+    public List<String> getAlfabetoDeEntrada() {
+        return alfabetoDeEntrada;
+    }
+
+    /**
+     * Método que retorna o conjunto de transições do AFD
+     *
+     * @return
+     */
+    public List<Transicao> getTransicoes() {
+        return transicoes;
+    }
+    
+    /**
+     * Retorna todas as transicoes do estado e
+     * 
+     * @param e estado para se buscar as transicoes
+     * @return retorna um objeto Transicao caso exista e null caso contrário
+     */
+    public List<Transicao> getTransicoes(Estado e) {
+        List<Transicao> resposta = new ArrayList<Transicao>();
+        for (Transicao t : this.transicoes) {
+            if ((e.equals(t.getEstadoAtual()))) {
+                resposta.add(t);
+            }
+        }
+        return resposta;
+    }
+    
+    /**
+     * Método que retorna um objeto que reprenta a transicao ao se ler um
+     * simbolo, estando no Estado e.
+     * 
+     * @param e estado inicial.
+     * @param simboloLido string lida para a trasicao ocorrer
+     * @return retorna um objeto Transicao caso exista e null caso contrário
+     */
+    public Transicao getTransicao(Estado e, String simboloLido) {
+        for (Transicao transicao : this.transicoes) {
+            if ((e.equals(transicao.getEstadoAtual())) && simboloLido.equals(transicao.getSimboloLido())) {//confirmo se oque leu para mover é igual
+                return transicao;
+            }
+        }
+        return null;
+    }
+    
     /**
      * Busca um Estado pelo nome dentro do AFD e o retorna
      *
@@ -165,49 +290,7 @@ public class Afd {
         }
         return null;
     }
-
-    /**
-     * Verifica se um simbolo s pertence ao alfabeto.
-     *
-     * @param s simbolo a ser verificada
-     * @return boolean onde true-pertence e false-não pertence
-     */
-    public boolean simboloPertenceAoAlfabeto(String s) {
-        for (String x : alfabetoDeEntrada) {
-            if (x.equals(s)) {
-                return true;
-            }
-        }
-        return false;
-    }
     
-    /**
-     * Método que retorna um objeto que reprenta a transicao ao se ler um
-     * simbolo, estando no Estado e.
-     * 
-     * @param e estado inicial.
-     * @param simboloLido string lida na fita de entrada
-     * @return retorna um objeto Transicao caso exista e null caso contrário
-     */
-    public Transicao getTransicao(Estado e, String simboloLido) {
-        for (Transicao transicao : this.transicoes) {
-            if (simboloLido.equals(transicao.getSimboloLido()) && (e.equals(transicao.getEstadoAtual()))) {//confirmo se oque leu para mover é igual
-                return transicao;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Método que altera o estado atual do AFD
-     *
-     * @param movimento objeto movimento passado como parametro para se alterar
-     * o movimento
-     */
-    private void setEstadoAtual(Transicao movimento) {
-        estadoAtual = movimento.getEstadoAposTransicao();
-    }
-
     /**
      * Método que retorna uma representação do AFD em formato de String. O
      * formato segue o padrão apresentado no enunciado do trabalho de LFA
@@ -249,41 +332,5 @@ public class Afd {
         afd = afd.substring(0, afd.length() - 1);
         afd += "}\n)";
         return afd;
-    }
-
-    /**
-     * Método que retorna o conjunto de estados do AFD
-     *
-     * @return
-     */
-    public List<Estado> getEstados() {
-        return estados;
-    }
-
-    /**
-     * Método que retorna o estado inicial do AFD
-     *
-     * @return
-     */
-    public Estado getEstadoInicial() {
-        return estadoInicial;
-    }
-
-    /**
-     * Método que retorna o alfabeto de entrada do AFD
-     *
-     * @return
-     */
-    public List<String> getAlfabetoDeEntrada() {
-        return alfabetoDeEntrada;
-    }
-
-    /**
-     * Método que retorna o conjunto de transições do AFD
-     *
-     * @return
-     */
-    public List<Transicao> getTransicoes() {
-        return transicoes;
     }
 }
