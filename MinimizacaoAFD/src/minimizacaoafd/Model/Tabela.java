@@ -55,8 +55,190 @@ public class Tabela {
     
     @Override
     public String toString(){
-       //TODO Maurício formatar a tabela toda bonita independente de como ficar
-       return "";
+        String TAB = "\t";
+        int maiorNumeroDependentes = 0;
+        for(Linha linha : linhas){
+            //ver qual linha qual linha tem o maior numero de dependentes
+            if (linha.getDependentes().size() > maiorNumeroDependentes) {
+                maiorNumeroDependentes = linha.getDependentes().size();
+            }
+            //Acrescentar a linha em forma de string na stringona
+        }
+       
+        String linhaTabela = TAB + " INDICE" + TAB + TAB;
+        linhaTabela += TAB + "D[i,j] = " + TAB + TAB;
+        //cada caso de numero de dependentes:
+        //se o maior numero de dependentes for menor que 3, ele formata 
+        //toda a coluna S[i,j] para comportar até 2 dependentes
+        if (maiorNumeroDependentes < 3) {
+            linhaTabela += TAB + "   S[i,j] = " + TAB + TAB;
+            linhaTabela += TAB + "  MOTIVO\n";
+            
+            for(Linha linha : linhas){
+                linhaTabela += TAB + "[" + linha.getPar1().getNome() + "," + linha.getPar2().getNome() + "]";
+                linhaTabela += TAB + TAB;
+                //Verificando se pode juntar
+                linhaTabela += TAB + TAB + (linha.getPodeJuntar() ? "   0" : "   1") + TAB + TAB;
+                //colocando dependentes de acordo com o tanto que tem
+                int qtdDependentesAux = linha.getDependentes().size();
+                if (qtdDependentesAux == 0)
+                    linhaTabela += TAB + TAB + "  { }" + TAB + TAB;
+                
+                if (qtdDependentesAux == 1) {
+                    List<Linha> dependentesDaLinha;
+                    dependentesDaLinha = linha.getDependentes();
+                    linhaTabela += TAB + "  { ";
+                    for (Linha dependente : dependentesDaLinha){
+                        linhaTabela += "[" + dependente.getPar1().getNome() + ",";
+                        linhaTabela += linhaTabela += dependente.getPar2().getNome() + "]";
+                    }
+                    linhaTabela += " }" + TAB + TAB;
+                }
+                if (qtdDependentesAux == 2) {
+                    List<Linha> dependentesDaLinha = linha.getDependentes();
+                    linhaTabela +=  "  { ";
+                    for (Linha dependente : dependentesDaLinha){
+                        linhaTabela += "[" + dependente.getPar1().getNome() + ",";
+                        linhaTabela += linhaTabela += dependente.getPar2().getNome() + "], ";
+                    }
+                    linhaTabela = linhaTabela.substring(0, linhaTabela.length() - 1);
+                    linhaTabela += "}" + TAB;
+                }
+                if (linha.getMotivo().indexOf("f") == 0) {
+                    linhaTabela += TAB + linha.getMotivo() + '\n';
+                }
+                else if (linha.getMotivo().indexOf("p") == 0) {
+                    linhaTabela += TAB + "   " + linha.getMotivo() + "\n";
+                }
+                else {
+                    linhaTabela += TAB + TAB + linha.getMotivo() + "\n";
+                }
+            }
+        }
+      
+        //se o maior numero de dependentes for 3, ele formata 
+        //toda a coluna S[i,j] para comportar até 3 dependentes
+        if (maiorNumeroDependentes == 3) {
+            linhaTabela += TAB + " S[i,j] = " + TAB + TAB;
+            linhaTabela += TAB + "  MOTIVO\n";
+            
+            for(Linha linha : linhas){
+                linhaTabela += TAB + "[" + linha.getPar1().getNome() + "," + linha.getPar2().getNome() + "]";
+                linhaTabela += TAB + TAB;
+                //Verificando se pode juntar
+                linhaTabela += TAB + TAB + (linha.getPodeJuntar() ? "   0" : "   1") + TAB + TAB;
+                //colocando dependentes de acordo com o tanto que tem
+                int qtdDependentesAux = linha.getDependentes().size();
+                if (qtdDependentesAux == 0)
+                    linhaTabela += TAB + TAB + TAB + "   { }" + TAB + TAB + TAB;
+                
+                if (qtdDependentesAux == 1) {
+                    List<Linha> dependentesDaLinha = linha.getDependentes();
+                    linhaTabela += TAB + TAB + "  { ";
+                    for (Linha dependente : dependentesDaLinha){
+                        linhaTabela += "[" + dependente.getPar1().getNome() + ",";
+                        linhaTabela += linhaTabela += dependente.getPar2().getNome() + "]";
+                    }
+                    linhaTabela += " }" + TAB + TAB;
+                }
+                if (qtdDependentesAux == 2) {
+                    List<Linha> dependentesDaLinha = linha.getDependentes();
+                    linhaTabela += TAB + "   { ";
+                    for (Linha dependente : dependentesDaLinha){
+                        linhaTabela += "[" + dependente.getPar1().getNome() + ",";
+                        linhaTabela += linhaTabela += dependente.getPar2().getNome() + "], ";
+                    }
+                    linhaTabela = linhaTabela.substring(0, linhaTabela.length() - 2);
+                    linhaTabela += " }" + TAB + TAB;
+                }
+                if (qtdDependentesAux == 3) {
+                    List<Linha> dependentesDaLinha = linha.getDependentes();
+                    linhaTabela += "   { ";
+                    for (Linha dependente : dependentesDaLinha){
+                        linhaTabela += "[" + dependente.getPar1().getNome() + ",";
+                        linhaTabela += linhaTabela += dependente.getPar2().getNome() + "], ";
+                    }
+                    linhaTabela = linhaTabela.substring(0, linhaTabela.length() - 2);
+                    linhaTabela += " }" + TAB;                    
+                }
+                if (linha.getMotivo().indexOf("f") == 0) {
+                    linhaTabela += TAB + linha.getMotivo() + '\n';
+                }
+                else if (linha.getMotivo().indexOf("p") == 0) {
+                    linhaTabela += TAB + "   " + linha.getMotivo() + "\n";
+                }
+                else {
+                    linhaTabela += TAB + TAB + linha.getMotivo() + "\n";
+                }
+            }
+        }
+        
+        //se o maior numero de dependentes for 4, ele formata 
+        //toda a coluna S[i,j] para comportar até 4 dependentes
+        if (maiorNumeroDependentes == 4) {
+            linhaTabela += TAB + TAB + TAB + "   S[i,j] = " + TAB + TAB + TAB + TAB;
+            linhaTabela += TAB + "  MOTIVO\n";
+            for(Linha linha : linhas){
+                linhaTabela += TAB + "[" + linha.getPar1().getNome() + "," + linha.getPar2().getNome() + "]";
+                linhaTabela += TAB + TAB;
+                //Verificando se pode juntar
+                linhaTabela += TAB + TAB + (linha.getPodeJuntar() ? "   0" : "   1") + TAB + TAB;
+                //colocando dependentes de acordo com o tanto que tem
+                int qtdDependentesAux = linha.getDependentes().size();
+                if (qtdDependentesAux == 0)
+                    linhaTabela += TAB + TAB + TAB + TAB +"  { }" + TAB + TAB + TAB + TAB;
+                
+                if (qtdDependentesAux == 1) {
+                    List<Linha> dependentesDaLinha = linha.getDependentes();
+                    linhaTabela += TAB + TAB + TAB + "  { ";
+                    for (Linha dependente : dependentesDaLinha){
+                        linhaTabela += "[" + dependente.getPar1().getNome() + ",";
+                        linhaTabela += linhaTabela += dependente.getPar2().getNome() + "]";
+                    }
+                    linhaTabela += " }" + TAB + TAB + TAB + TAB;
+                }
+                if (qtdDependentesAux == 2) {
+                    List<Linha> dependentesDaLinha = linha.getDependentes();
+                    linhaTabela += TAB + TAB + "  { ";
+                    for (Linha dependente : dependentesDaLinha){
+                        linhaTabela += "[" + dependente.getPar1().getNome() + ",";
+                        linhaTabela += linhaTabela += dependente.getPar2().getNome() + "], ";
+                    }
+                    linhaTabela = linhaTabela.substring(0, linhaTabela.length() - 2);
+                    linhaTabela += " }" + TAB + TAB + TAB;
+                }
+                if (qtdDependentesAux == 3) {
+                    List<Linha> dependentesDaLinha = linha.getDependentes();
+                    linhaTabela += TAB + "   { ";
+                    for (Linha dependente : dependentesDaLinha){
+                        linhaTabela += "[" + dependente.getPar1().getNome() + ",";
+                        linhaTabela += linhaTabela += dependente.getPar2().getNome() + "], ";
+                    }
+                    linhaTabela = linhaTabela.substring(0, linhaTabela.length() - 2);
+                    linhaTabela += " }" + TAB + TAB;                    
+                }
+                if (qtdDependentesAux == 4) {
+                    List<Linha> dependentesDaLinha = linha.getDependentes();
+                    linhaTabela += "   { ";
+                    for (Linha dependente : dependentesDaLinha){
+                        linhaTabela += "[" + dependente.getPar1().getNome() + ",";
+                        linhaTabela += linhaTabela += dependente.getPar2().getNome() + "], ";
+                    }
+                    linhaTabela = linhaTabela.substring(0, linhaTabela.length() - 2);
+                    linhaTabela += " }" + TAB;
+                }
+                if (linha.getMotivo().indexOf("f") == 0) {
+                    linhaTabela += TAB + linha.getMotivo() + '\n';
+                }
+                else if (linha.getMotivo().indexOf("p") == 0) {
+                    linhaTabela += TAB + "   " + linha.getMotivo() + "\n";
+                }
+                else {
+                    linhaTabela += TAB + TAB + linha.getMotivo() + "\n";
+                }
+            }
+        }
+        return linhaTabela;
     }
     
     //APAGAR ESTE METODO DEPOIS
