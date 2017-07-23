@@ -49,9 +49,6 @@ public class Minimizacao {
         // atualizando o afd.
         atualizandoAfd();
         save();
-        //TIRAR OS PRINT DAQUI
-        System.out.println(afd.toString());
-        System.out.println(tabelaMinimizacao.toString());
     }
 
     /**
@@ -272,7 +269,7 @@ public class Minimizacao {
 
     private String gerarNovoNome(HashSet conjunto) {
         // precisa garantir que o numero do nome esteja ordenado.
-        String s = "q";
+        String s = "";
         int v[] = new int[conjunto.size()];
         int cont = 0;
         for (Object e : conjunto) { // cada estado do conjunto
@@ -282,7 +279,7 @@ public class Minimizacao {
         Arrays.sort(v);
 
         for (int i : v) {
-            s += String.valueOf(i);
+            s += "q" + String.valueOf(i);
         }
         return s;
     }
