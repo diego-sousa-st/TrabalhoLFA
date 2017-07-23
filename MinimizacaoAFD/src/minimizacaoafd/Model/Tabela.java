@@ -52,204 +52,108 @@ public class Tabela {
         return null;
     }
     
-    
-    @Override
-    public String toString(){
-        String TAB = "\t";
-        int maiorNumeroDependentes = 0;
+    /**
+     * Método que calcula a maior qtd de dependentes para formatar a tabela
+     * @return 
+     */
+    private int getNumMaxDependentes(){
+        int maxDependentes = 0;
         for(Linha linha : linhas){
-            //ver qual linha qual linha tem o maior numero de dependentes
-            if (linha.getDependentes().size() > maiorNumeroDependentes) {
-                maiorNumeroDependentes = linha.getDependentes().size();
-            }
-            //Acrescentar a linha em forma de string na stringona
-        }
-       
-        String linhaTabela = TAB + " INDICE" + TAB + TAB;
-        linhaTabela += TAB + "D[i,j] = " + TAB + TAB;
-        //cada caso de numero de dependentes:
-        //se o maior numero de dependentes for menor que 3, ele formata 
-        //toda a coluna S[i,j] para comportar até 2 dependentes
-        if (maiorNumeroDependentes < 3) {
-            linhaTabela += TAB + "   S[i,j] = " + TAB + TAB;
-            linhaTabela += TAB + "  MOTIVO\n";
-            
-            for(Linha linha : linhas){
-                linhaTabela += TAB + "[" + linha.getPar1().getNome() + "," + linha.getPar2().getNome() + "]";
-                linhaTabela += TAB + TAB;
-                //Verificando se pode juntar
-                linhaTabela += TAB + TAB + (linha.getPodeJuntar() ? "   0" : "   1") + TAB + TAB;
-                //colocando dependentes de acordo com o tanto que tem
-                int qtdDependentesAux = linha.getDependentes().size();
-                if (qtdDependentesAux == 0)
-                    linhaTabela += TAB + TAB + "  { }" + TAB + TAB;
-                
-                if (qtdDependentesAux == 1) {
-                    List<Linha> dependentesDaLinha;
-                    dependentesDaLinha = linha.getDependentes();
-                    linhaTabela += TAB + "  { ";
-                    for (Linha dependente : dependentesDaLinha){
-                        linhaTabela += "[" + dependente.getPar1().getNome() + ",";
-                        linhaTabela += linhaTabela += dependente.getPar2().getNome() + "]";
-                    }
-                    linhaTabela += " }" + TAB + TAB;
-                }
-                if (qtdDependentesAux == 2) {
-                    List<Linha> dependentesDaLinha = linha.getDependentes();
-                    linhaTabela +=  "  { ";
-                    for (Linha dependente : dependentesDaLinha){
-                        linhaTabela += "[" + dependente.getPar1().getNome() + ",";
-                        linhaTabela += linhaTabela += dependente.getPar2().getNome() + "], ";
-                    }
-                    linhaTabela = linhaTabela.substring(0, linhaTabela.length() - 1);
-                    linhaTabela += "}" + TAB;
-                }
-                if (linha.getMotivo().indexOf("f") == 0) {
-                    linhaTabela += TAB + linha.getMotivo() + '\n';
-                }
-                else if (linha.getMotivo().indexOf("p") == 0) {
-                    linhaTabela += TAB + "   " + linha.getMotivo() + "\n";
-                }
-                else {
-                    linhaTabela += TAB + TAB + linha.getMotivo() + "\n";
-                }
+            int qtdDependentes = linha.getDependentes().size();
+            if(qtdDependentes > maxDependentes){
+                maxDependentes = qtdDependentes;
             }
         }
-      
-        //se o maior numero de dependentes for 3, ele formata 
-        //toda a coluna S[i,j] para comportar até 3 dependentes
-        if (maiorNumeroDependentes == 3) {
-            linhaTabela += TAB + " S[i,j] = " + TAB + TAB;
-            linhaTabela += TAB + "  MOTIVO\n";
-            
-            for(Linha linha : linhas){
-                linhaTabela += TAB + "[" + linha.getPar1().getNome() + "," + linha.getPar2().getNome() + "]";
-                linhaTabela += TAB + TAB;
-                //Verificando se pode juntar
-                linhaTabela += TAB + TAB + (linha.getPodeJuntar() ? "   0" : "   1") + TAB + TAB;
-                //colocando dependentes de acordo com o tanto que tem
-                int qtdDependentesAux = linha.getDependentes().size();
-                if (qtdDependentesAux == 0)
-                    linhaTabela += TAB + TAB + TAB + "   { }" + TAB + TAB + TAB;
-                
-                if (qtdDependentesAux == 1) {
-                    List<Linha> dependentesDaLinha = linha.getDependentes();
-                    linhaTabela += TAB + TAB + "  { ";
-                    for (Linha dependente : dependentesDaLinha){
-                        linhaTabela += "[" + dependente.getPar1().getNome() + ",";
-                        linhaTabela += linhaTabela += dependente.getPar2().getNome() + "]";
-                    }
-                    linhaTabela += " }" + TAB + TAB;
-                }
-                if (qtdDependentesAux == 2) {
-                    List<Linha> dependentesDaLinha = linha.getDependentes();
-                    linhaTabela += TAB + "   { ";
-                    for (Linha dependente : dependentesDaLinha){
-                        linhaTabela += "[" + dependente.getPar1().getNome() + ",";
-                        linhaTabela += linhaTabela += dependente.getPar2().getNome() + "], ";
-                    }
-                    linhaTabela = linhaTabela.substring(0, linhaTabela.length() - 2);
-                    linhaTabela += " }" + TAB + TAB;
-                }
-                if (qtdDependentesAux == 3) {
-                    List<Linha> dependentesDaLinha = linha.getDependentes();
-                    linhaTabela += "   { ";
-                    for (Linha dependente : dependentesDaLinha){
-                        linhaTabela += "[" + dependente.getPar1().getNome() + ",";
-                        linhaTabela += linhaTabela += dependente.getPar2().getNome() + "], ";
-                    }
-                    linhaTabela = linhaTabela.substring(0, linhaTabela.length() - 2);
-                    linhaTabela += " }" + TAB;                    
-                }
-                if (linha.getMotivo().indexOf("f") == 0) {
-                    linhaTabela += TAB + linha.getMotivo() + '\n';
-                }
-                else if (linha.getMotivo().indexOf("p") == 0) {
-                    linhaTabela += TAB + "   " + linha.getMotivo() + "\n";
-                }
-                else {
-                    linhaTabela += TAB + TAB + linha.getMotivo() + "\n";
-                }
-            }
+        return maxDependentes;
+    }
+    
+    /**
+     * Método que retorna uma string com os tabs necessarios para formatar a 
+     * tabela direito
+     * @return 
+     */
+    private String getTabs(int qtd){
+        String tab = "";
+        for (int i = 0; i < qtd; i++) {
+            tab += "        ";
         }
-        
-        //se o maior numero de dependentes for 4, ele formata 
-        //toda a coluna S[i,j] para comportar até 4 dependentes
-        if (maiorNumeroDependentes == 4) {
-            linhaTabela += TAB + TAB + TAB + "   S[i,j] = " + TAB + TAB + TAB + TAB;
-            linhaTabela += TAB + "  MOTIVO\n";
-            for(Linha linha : linhas){
-                linhaTabela += TAB + "[" + linha.getPar1().getNome() + "," + linha.getPar2().getNome() + "]";
-                linhaTabela += TAB + TAB;
-                //Verificando se pode juntar
-                linhaTabela += TAB + TAB + (linha.getPodeJuntar() ? "   0" : "   1") + TAB + TAB;
-                //colocando dependentes de acordo com o tanto que tem
-                int qtdDependentesAux = linha.getDependentes().size();
-                if (qtdDependentesAux == 0)
-                    linhaTabela += TAB + TAB + TAB + TAB +"  { }" + TAB + TAB + TAB + TAB;
-                
-                if (qtdDependentesAux == 1) {
-                    List<Linha> dependentesDaLinha = linha.getDependentes();
-                    linhaTabela += TAB + TAB + TAB + "  { ";
-                    for (Linha dependente : dependentesDaLinha){
-                        linhaTabela += "[" + dependente.getPar1().getNome() + ",";
-                        linhaTabela += linhaTabela += dependente.getPar2().getNome() + "]";
-                    }
-                    linhaTabela += " }" + TAB + TAB + TAB + TAB;
-                }
-                if (qtdDependentesAux == 2) {
-                    List<Linha> dependentesDaLinha = linha.getDependentes();
-                    linhaTabela += TAB + TAB + "  { ";
-                    for (Linha dependente : dependentesDaLinha){
-                        linhaTabela += "[" + dependente.getPar1().getNome() + ",";
-                        linhaTabela += linhaTabela += dependente.getPar2().getNome() + "], ";
-                    }
-                    linhaTabela = linhaTabela.substring(0, linhaTabela.length() - 2);
-                    linhaTabela += " }" + TAB + TAB + TAB;
-                }
-                if (qtdDependentesAux == 3) {
-                    List<Linha> dependentesDaLinha = linha.getDependentes();
-                    linhaTabela += TAB + "   { ";
-                    for (Linha dependente : dependentesDaLinha){
-                        linhaTabela += "[" + dependente.getPar1().getNome() + ",";
-                        linhaTabela += linhaTabela += dependente.getPar2().getNome() + "], ";
-                    }
-                    linhaTabela = linhaTabela.substring(0, linhaTabela.length() - 2);
-                    linhaTabela += " }" + TAB + TAB;                    
-                }
-                if (qtdDependentesAux == 4) {
-                    List<Linha> dependentesDaLinha = linha.getDependentes();
-                    linhaTabela += "   { ";
-                    for (Linha dependente : dependentesDaLinha){
-                        linhaTabela += "[" + dependente.getPar1().getNome() + ",";
-                        linhaTabela += linhaTabela += dependente.getPar2().getNome() + "], ";
-                    }
-                    linhaTabela = linhaTabela.substring(0, linhaTabela.length() - 2);
-                    linhaTabela += " }" + TAB;
-                }
-                if (linha.getMotivo().indexOf("f") == 0) {
-                    linhaTabela += TAB + linha.getMotivo() + '\n';
-                }
-                else if (linha.getMotivo().indexOf("p") == 0) {
-                    linhaTabela += TAB + "   " + linha.getMotivo() + "\n";
-                }
-                else {
-                    linhaTabela += TAB + TAB + linha.getMotivo() + "\n";
-                }
-            }
+        return tab;
+    }
+    
+    /**
+     * Método que monta o cabecalho da tabela
+     * @param maxDependentes
+     * @param TAB
+     * @return 
+     */
+    private String cabecalhoTabela(int maxDependentes,String TAB){
+        String cabecalho = TAB;
+        String tabsNecessarios = getTabs(Math.floorDiv(maxDependentes,2)+1);
+        cabecalho += "INDICE" + TAB + "D[i,j]" + TAB + tabsNecessarios + "S[i,j]" + tabsNecessarios + TAB + "MOTIVO" + "\n";
+        return cabecalho;
+    }
+    
+    /**
+     * Método que retorna a string "1" se os estados não puderem juntar e "0" caso contrário
+     * @param podeJuntar
+     * @return 
+     */
+    private String stringPodeJuntar(boolean podeJuntar){
+        if(podeJuntar)
+            return "   0    ";
+        return "   1    ";
+    }        
+    
+    /**
+     * Método que retorna os dependentes de uma linha no formato String
+     * @param linha
+     * @return 
+     */
+    private String getDependentes(Linha linha){
+        List<Linha> linhasDependentes = linha.getDependentes();
+        String dependentes = "";
+        for(Linha linhaDependente : linhasDependentes){
+            dependentes += "[" + linhaDependente.getPar1().getNome() + "," + linhaDependente.getPar2().getNome() + "]" + ",";
         }
+        //retiro a ultima virgula
+        if(!dependentes.equals("")){
+            dependentes = dependentes.substring(0, dependentes.length()-1);
+        }            
+        return dependentes;
+    }
+    
+    /**
+     * Método que retorna uma linha da tabela no formato String que será salva no arquivo
+     * @param linha
+     * @param maxDependentes
+     * @param TAB
+     * @return 
+     */
+    private String linhaToString(Linha linha,int maxDependentes,String TAB){
+        int qtdDependentesLinha = linha.getDependentes().size();
+        String tabsNecessarios = getTabs(Math.floorDiv(maxDependentes-qtdDependentesLinha,2)+1);
+        String linhaTabela = TAB;
+        linhaTabela += "[" + linha.getPar1().getNome() + ","+ linha.getPar2().getNome() +"]";
+        linhaTabela += TAB + stringPodeJuntar(linha.getPodeJuntar());        
+        linhaTabela += TAB + tabsNecessarios + "{" + getDependentes(linha) + "}" + tabsNecessarios;
+        linhaTabela += TAB + linha.getMotivo() + "\n";
         return linhaTabela;
     }
     
-    //APAGAR ESTE METODO DEPOIS
-    public void exibirTabelaImprovisada(){
-        for(Linha l: linhas){
-            String x = "";
-            for(Linha dep: l.getDependentes()){
-                x += "(" + dep.getPar1().getNome() + "," + dep.getPar2().getNome() + ") ";
-            }
-            System.out.println("(" + l.getPar1().getNome() + "," + l.getPar2().getNome() + ") " + l.getPodeJuntar() + " - " + x + " - " + l.getMotivo());
+    /**
+     * Método toString sobreescrito para que a tabela seja salva em arquivo. O formato
+     * dessa string é o mesmo mostrado na descrição do trabalho de LFA.
+     * @return 
+     */
+    @Override
+    public String toString(){
+        int maxDependentes = getNumMaxDependentes();
+        String tabela = "";
+        String TAB = "        ";
+        tabela += cabecalhoTabela(maxDependentes,TAB);
+        for(Linha linha : linhas){
+            tabela += linhaToString(linha,maxDependentes,TAB);
         }
-        
-    }
+        return tabela;
+    }    
 }

@@ -1,0 +1,2 @@
+        INDICE        D[i,j]                S[i,j]                MOTIVO
+        [q0,q1]           1                    {}                final/nao-final

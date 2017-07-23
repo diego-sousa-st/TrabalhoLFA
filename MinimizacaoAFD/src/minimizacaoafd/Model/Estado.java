@@ -41,11 +41,27 @@ public class Estado {
      *
      * @param e estado a ser comparado com o estado atual
      * @return True caso sejam iguais e false caso contrário
-     */
+     */    
     public boolean equals(Estado e) {
-        if (this == e || (nome.equals(e.nome) && (ehFinal == e.ehFinal))) {
+        if (this == e || (nome.equals(e.getNome()) && (ehFinal == e.getEhFinal()))) {
             return true;
         }
         return false;
     }
+    
+    /**
+     * Método hashCode Sobresrito que é usado pelo hashset
+     * @return 
+     */
+    @Override
+    public int hashCode(){
+       String numEstado = nome;
+       /* retiro o "q" do nome do estado (este método somente funcionará se o 
+       *  estado tiver somente uma letra inicial no nome, e depois o resto tem 
+       *  que ser numero
+       */
+       numEstado = numEstado.substring(1);
+       int hash = Integer.parseInt(numEstado);              
+       return hash*hash;
+    }    
 }

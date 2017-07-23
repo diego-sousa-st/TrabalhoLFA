@@ -18,8 +18,7 @@ public class MinimizacaoAFD {
      */
     public static void main(String[] args) {
         try {
-            //Minimizacao minimizador = new Minimizacao("C:\\Users\\Diego\\Documents\\NetBeansProjects\\TrabalhoLFA\\MinimizacaoAFD\\desc1.txt", "" , "");
-            Minimizacao minimizador = new Minimizacao("C:\\Users\\neche\\Documents\\GitHub\\TrabalhoLFA\\MinimizacaoAFD\\desc1.txt", "" , "");
+            Minimizacao minimizador = new Minimizacao(args[0],args[1],args[2]);            
             minimizador.executar();
         } catch (Exception e) {
             System.out.println(e.getMessage());

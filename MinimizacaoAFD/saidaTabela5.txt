@@ -1,0 +1,4 @@
+        INDICE        D[i,j]                S[i,j]                MOTIVO
+        [q0,q1]           0                    {}                
+        [q0,q2]           0                    {}                
+        [q1,q2]           0                    {}                
